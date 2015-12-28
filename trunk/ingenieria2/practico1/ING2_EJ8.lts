@@ -1,0 +1,8 @@
+const MAX = 108
+const R=95
+const MIN = 88
+range T = 88..108
+INIT = (on->ON[MAX]),
+ON[i:T] = (scan-> SCAN[i]| reset->ON[MAX] | off -> INIT),
+SCAN [i:T] = (nop -> if (i==MIN) then SCAN[MAX] else if (i-1==R) then ON [i-1] else SCAN[i-1])
+\{nop}.

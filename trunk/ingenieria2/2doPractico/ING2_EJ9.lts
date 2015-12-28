@@ -1,0 +1,19 @@
+const D = 3
+range T = 0..D /* Cantidad de volumenes disponibles de un libro. */
+const CANT = 10 /* Cantidad de libros en el catalogo. */
+range CA = 0..CANT
+range CRED = 0..4 /* Cantidad de libros que puede comprar. */
+
+LIBRO = LIBRO[D],
+LIBRO[i:T] = (when (i > 0) disponible -> LIBRO[i-1]).
+
+CLIENTE = CLIENTE [4],
+CLIENTE[k:CRED] = (when (k>0) solicitarcompra[lib:CA]-> CLIENTE[k-1]
+					| revisarcredito[k]->CLIENTE[k])./*cl.j.revisarcredito.i*/
+
+EDITORIAL = (solicitarcompra[lib:CA]->revisarcredito[k:CRED]-> if (k>0) then VENTA[lib]
+                                                  else EDITORIAL), //cl.j.revisarcredito.i
+VENTA[lib:CA] = (libro[lib].disponible -> vende-> EDITORIAL)./*cl.j.diponible.i*/
+
+
+||LIBRERIA = ({cl[1..2]}:CLIENTE || {cl[1..2]}::EDITORIAL || {cl[1..2]}::{libro[1..CANT]}:LIBRO).

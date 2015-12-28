@@ -1,0 +1,3 @@
+const MAXSEQ = 3
+range T = 0..MAXSEQ
+

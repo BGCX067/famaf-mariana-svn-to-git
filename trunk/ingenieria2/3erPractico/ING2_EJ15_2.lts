@@ -1,0 +1,43 @@
+/* Turnos (del Jeff & Jeff): */
+
+range T = 1..2
+set CardActions = {set1,set2,[1],[2]}
+CARDVAR = VAL[1],
+VAL[i:T] = ( set1 -> VAL[1]
+              | set2 -> VAL[2]
+              | [i] -> VAL[i] ).
+
+/* Banderas (pág. 158 del Jeff & Jeff): */
+
+const True = 1    const False = 0
+   range Bool = False..True
+   set BoolActions =
+        {setTrue,setFalse,[False],[True]}
+
+   BOOLVAR = VAL[False],
+   VAL[v:Bool] = ( setTrue -> VAL[True]
+                 | setFalse -> VAL[False]
+                 | [v] -> VAL[v]).
+
+/* Vecinos: */
+
+VECINO1 = (flag[1].setTrue->vecino[1].set2->WAIT),
+	//	| vecino[1].[t:T]->flag[1].[v:Bool]->if (v==True && t==1) then ENTRAR else VECINO1),
+WAIT = (vecino[1].[t:T]->flag[1].[v:Bool]->if (v==True && t==1) then ENTRAR else WAIT
+		|),
+ENTRAR = (vecino[1].entrar->vecino[1].juntarmoras->vecino[1].salir->flag[1].setFalse->vecino[1].set2->VECINO1) + {vecino[1].set1, vecino[2].set2}.
+
+VECINO2 = (flag[2].setTrue ->vecino[2].set1-> WAIT),
+	//	| vecino[2].[t:T]->flag[2].[v:Bool]->if (v==True && t==2) then ENTRAR else VECINO2),
+WAIT = (vecino[2].[t:T]->flag[2].[v:Bool]->if (v==True && t==2) then ENTRAR else WAIT),
+ENTRAR = (vecino[2].entrar->vecino[2].juntarmoras->vecino[2].salir->flag[2].setFalse->vecino[2].set1->VECINO2) + {vecino[1].set1, vecino[2].set2}.
+
+property MUTEX = MUTEX[0],
+MUTEX[n:0..1] = (vecino[v:T].entrar->MUTEX[n+1]).
+
+||MORAS = (VECINO1 || VECINO2 || flag[1..2] : BOOLVAR || vecino[1..2] : CARDVAR || MUTEX).
+
+progress VECINO1P = {vecino[1].entrar}
+progress VECINO2P = {vecino[2].entrar}
+
+// TIENE UN SUPER DEADLOCK ¬¬

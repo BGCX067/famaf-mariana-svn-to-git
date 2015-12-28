@@ -1,0 +1,9 @@
+VECINO = (izar-> juntarmoras-> arriar -> VECINO).
+
+property MUTEX = (vecino[v:1..2].izar->vecino[v].arriar->MUTEX).
+
+||MORAS = (vecino[1..2] : VECINO || MUTEX).
+
+progress VECINO1 = {vecino[1].izar}
+progress VECINO2 = {vecino[2].izar}
+

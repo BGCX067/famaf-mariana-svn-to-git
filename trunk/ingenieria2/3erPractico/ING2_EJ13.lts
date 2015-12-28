@@ -1,0 +1,9 @@
+range T = 0..15
+
+ASCENSOR = (enter->ASCENSOR |exit->ASCENSOR).
+
+property MAXIMO = MAXIMO[0],
+MAXIMO [v:T] = (when (v<10) enter->MAXIMO[v+1]
+			 | when (v>0) exit ->MAXIMO[v-1]). 
+
+||ASCMAX = (ASCENSOR || MAXIMO).

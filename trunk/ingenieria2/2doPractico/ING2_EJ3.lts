@@ -1,0 +1,11 @@
+set CANT = {[1..2]}
+range T = 0..1
+
+ASIENTO = ASIENTO[0],
+ASIENTO[i:T] = (when (i==0) reservar->ASIENTO[1]). 
+
+EMPLEADO = (elegir[i:CANT] -> asientos[i].reservar ->EMPLEADO).
+
+CLIENTE = (elegir[i:CANT] -> CLIENTE).
+
+||TEATRO = ({cl[1..2]} :: {asientos[i:CANT]} : ASIENTO || {cl[1..2]} :: EMPLEADO || {cl[1..2]} : CLIENTE).

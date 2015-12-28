@@ -1,0 +1,47 @@
+const A = 0
+const B = 1
+set S = {[A],[B]}
+
+range T = 0..1
+
+/* Proceso de entrada: 
+ENTRADA = (enta->E[A] | entb->E[B]),
+E[i:T] = (when (i==A) cp[j:T]-> if (j==0) then DEJARP else WAITP
+	   | when (i==B) ct[k:T]->if (k==0) then DEJART else WAITT),
+DEJARP = (a.soltar->ENTRADA),
+DEJART = (b.soltar->ENTRADA),
+WAITP = (cp[j:T]-> if (j==0) then DEJARP else WAITP),
+WAITT = (ct[k:T]->if (k==0) then DEJART else WAITT). */
+
+
+ENTRADA = (enta->E[A]
+		  |entb->E[B]),
+E[i:S] = (chk[i][j:T]-> if (j==0) then DEJAR[i] else WAIT[i]),
+DEJAR[i:S] = (soltar[i]->ENTRADA),
+WAIT[i:S] = (chk[i][j:T]-> if (j==0) then DEJAR[i] else WAIT[i])
+/{forall[j:T] {prensa.chk[j]/chk[A][j]},
+  forall[j:T] {taladro.chk[j]/chk[B][j]},
+  taladro.soltar/soltar[B],
+  prensa.soltar/soltar[A]    }.
+
+
+/* Proceso que prensa: */
+MAQUINA = P[0],
+P[i:T] = (when (i==0) soltar->P[1]
+	   | when (i==1) procesar->sacar->P[0]
+	   | chk[i]->P[i]).
+
+/* Proceso que taladra:  
+TALADRO = T[0],
+T[i:T] = (when (i==0) soltarb->T[1]
+	   | when (i==1) taladrar->sacarb->T[0]
+	   | ct[k:T] -> T[k]).
+*/
+
+/* Proceso de salida: */
+SALIDA = ( sacar -> SALIDA).
+
+||FABRICA = (ENTRADA || {prensa, taladro} : SALIDA || {prensa,taladro} : MAQUINA). 
+
+
+

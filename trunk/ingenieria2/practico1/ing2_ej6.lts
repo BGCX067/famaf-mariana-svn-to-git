@@ -1,0 +1,8 @@
+const N = 9
+range T = 0..N
+TANQUE = AGUA [5],
+AGUA [i:T] = (when (i<N)sube[i+1] -> AGUA[i+1]
+             |when (0>i)baja[i-1] -> AGUA[i-1]
+             |when (0<=i && i<2)nivelbajo[i] ->AGUA[i]
+             |when (2<=i && i<8)normal[i] -> AGUA[i]
+             |when (i>=8)nivelalto[i]-> AGUA[i]) @{nivelbajo,nivelalto,normal}.

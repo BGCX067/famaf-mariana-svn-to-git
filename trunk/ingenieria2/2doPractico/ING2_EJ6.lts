@@ -1,0 +1,30 @@
+range T = 0..5
+const SEG = 10
+range Z = 0..SEG
+range M = 0..3
+const CANT = 3
+
+TRANSMISOR = TRANSMISOR [0],
+TRANSMISOR[nfts:T] = (fnl[k:0..1]->ENVIAR[k][nfts]),
+ENVIAR[k:0..1][nfts:T] = (tpl[k][nfts]-> tiempo -> CORRETIEMPO[SEG][nfts][k]),
+CORRETIEMPO[i:Z][j:T][k:0..1] = (when (i>0) corretiempo -> CORRETIEMPO [i-1][j][k]
+                  | when (i==0) tiempofuera -> TRANSMISOR[j]
+                  | fpl[ack:T][k]-> if (ack == j) then TRANSMISOR[(j+1)%5]
+                    else ENVIAR[k][j]).
+
+RECEPTOR = RECEPTOR[0],
+RECEPTOR[fe:T] = (fpl[ack:T][data:0..1]->framerecibido[seq:T]-> if (seq==fe) then REC[(fe+1)%5][data] else R[fe]),
+REC[fe:T][data:0..1] = (tnl[data]->tpl[data][fe-1]->RECEPTOR[fe]),
+R[fe:T] = (tpl[fe]->RECEPTOR[fe]).
+
+
+COLA = COLA[0],
+COLA[i:M] = (when (i<CANT) enviardato-> COLA[i+1]
+            | when (i>0) recibirdato-> COLA[i-1]).//¿me es necesario diagramar la cola?
+
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+const C =5
+const D = 10
+const V = 20
+P = (pc->PAGAR[C] | pd->PAGAR[D] | pv->PAGAR[V]),
+PAGAR[i:0..40] = (when (i<36)pagarc[i]-> PAGAR[i+C]
+				| when (i<31)pagard[i] -> PAGAR[i+D]
+				| when (i<21)pagarv[i]-> PAGAR[i+V]
+				| listo[i] -> VUELTO[i]),
+VUELTO[i:0..41] = (when (i<15) pagar[i]->PAGAR[i]
+				 | when (i>= 15) vuelto[i] -> FIN[i-15]),
+FIN[i:0..41] = STOP.

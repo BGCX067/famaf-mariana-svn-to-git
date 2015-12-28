@@ -1,0 +1,11 @@
+const MAX = 3
+range I = 0..MAX
+
+SEMAFORO(N=0) = SEMA[N],
+SEMA[v:I] = (up->SEMA [v+1]
+          | when (v>0) down-> SEMA[v-1]).
+LOOP = (mutex.down -> enter-> exit-> mutex.up ->LOOP).
+||SEMADEMO = (p[1..3] : LOOP || {p[1..3]} :: mutex:SEMAFORO(1)).
+
+property MUTEX = (p[i:1..3].enter->p[i].exit->MUTEX).
+||CHECK = (SEMADEMO || MUTEX).

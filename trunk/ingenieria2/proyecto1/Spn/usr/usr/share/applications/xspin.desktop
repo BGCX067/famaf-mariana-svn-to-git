@@ -1,0 +1,10 @@
+[Desktop Entry]
+X-SuSE-translate=true
+Categories=Development;IDE;
+Encoding=UTF-8
+Name=XSpin
+GenericName=Graphical frontend to spin
+Type=Application
+Exec=xspin
+Icon=
+

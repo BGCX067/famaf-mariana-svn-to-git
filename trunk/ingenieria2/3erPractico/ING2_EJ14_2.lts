@@ -1,0 +1,44 @@
+/* Banderas (pág. 158 del Jeff & Jeff): */
+
+const True = 1    const False = 0
+   range Bool = False..True
+   set BoolActions =
+        {setTrue,setFalse,[False],[True]}
+
+   BOOLVAR = VAL[False],
+   VAL[v:Bool] = ( setTrue -> VAL[True]
+                 | setFalse -> VAL[False]
+                 | [v] -> VAL[v]).
+
+/* Vecino: */
+
+
+VECINO1 = (flag[1].setTrue-> flag[2].[v:Bool] -> if (v==True) then WAIT else ENTRAR),
+ENTRAR = (vecino[1].entrar->vecino[1].juntarmoras-> vecino[1].salir->flag[1].setFalse->VECINO1),
+WAIT = (flag[1].setFalse-> WAIT2),
+WAIT2= (flag[1].setTrue-> flag[2].[v:Bool] -> if (v==True) then WAIT2 else ENTRAR).
+
+VECINO2 = (flag[2].setTrue-> flag[1].[v:Bool] -> if (v==True) then WAIT else ENTRAR),
+ENTRAR = (vecino[2].entrar->vecino[2].juntarmoras-> vecino[2].salir->flag[2].setFalse->VECINO2),
+WAIT = (flag[2].setFalse-> WAIT2),
+WAIT2= (flag[2].setTrue-> flag[1].[v:Bool] -> if (v==True) then WAIT2 else ENTRAR).
+
+/* Campito: */
+
+property MUTEX = (vecino[v:1..2].entrar-> vecino[v].salir-> MUTEX).
+
+||MORAS = (VECINO1 || VECINO2 || flag[1..2] : BOOLVAR || MUTEX).
+
+progress VECINO1 = {vecino[1].entrar}
+progress VECINO2 = {vecino[2].entrar}
+
+/* Traza que viola el progreso de ambos vecinos (produce un deadlock):
+flag.1.setTrue
+flag.2.setTrue
+flag.2.1
+flag.1.1
+flag.1.setFalse
+flag.1.setTrue
+flag.2.1
+flag.2.setFalse
+flag.2.setTrue */

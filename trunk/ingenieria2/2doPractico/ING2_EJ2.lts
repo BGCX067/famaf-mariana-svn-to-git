@@ -1,0 +1,18 @@
+const MAX = 2
+range T = 0..MAX
+set VALORES = {[0..2]}
+
+SEMAFORO = SEMAFORO[MAX],
+SEMAFORO[i:T] = (when (i>0) down->SEMAFORO[i-1]
+               | when (i<MAX) up->SEMAFORO[i+1]
+               | when (i==MAX) escribirdown ->SEMAFORO[0]
+               | when (i==0) escribirup -> SEMAFORO[MAX]).
+VAR = VAR[0],
+VAR[i:VALORES] = (read->VAR[i] | write[v:VALORES] -> VAR[v]).
+
+LECTOR = (down->read->up->LECTOR) + {write[i:T], escribirdown, escribirup}.
+
+ESCRITOR = (escribirdown->{write[v:T], read}->escribirup->ESCRITOR) + {down, up}.
+
+||LECTORES = (lect[1..3] : LECTOR || {escritor} : ESCRITOR || {lect[1..3], escritor} :: VAR
+              || {lect[1..3], escritor} :: SEMAFORO) \{escritor.down, escritor.up}.

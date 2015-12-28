@@ -1,0 +1,48 @@
+/* Turnos (del Jeff & Jeff): */
+
+range T = 1..2
+set CardActions = {set1,set2,[1],[2]}
+CARDVAR = VAL[1],
+VAL[i:T] = ( set1 -> VAL[1]
+              | set2 -> VAL[2]
+              | [i] -> VAL[i] ).
+
+/* Banderas (pág. 158 del Jeff & Jeff): */
+
+const True = 1    const False = 0
+   range Bool = False..True
+   set BoolActions =
+        {setTrue,setFalse,[False],[True]}
+
+   BOOLVAR = VAL[False],
+   VAL[v:Bool] = ( setTrue -> VAL[True]
+                 | setFalse -> VAL[False]
+                 | [v] -> VAL[v]).
+
+/* Vecinos: */
+
+VECINO1 = (flag[1].setTrue->turno[1].set2-> WAIT),
+WAIT = (flag[2].[v:Bool]-> turno[2].[t:T]-> if (t == 2 && v== True) then WAIT else ENTRAR),
+ENTRAR = (vecino[1].entrar->vecino[1].juntarmoras->vecino[1].salir->flag[1].setFalse->turno[1].set2->VECINO1)+{turno[1].set1, turno[2].set2}.
+
+
+VECINO2 = (flag[2].setTrue->turno[2].set1-> WAIT),
+WAIT = (flag[1].[v:Bool]-> turno[1].[t:T]-> if (t == 1 && v== True) then WAIT else ENTRAR),
+ENTRAR = (vecino[2].entrar->vecino[2].juntarmoras->vecino[2].salir->flag[2].setFalse->turno[2].set1->VECINO2)+{turno[1].set1, turno[2].set2}.
+
+property MUTEX = MUTEX[0],
+MUTEX[n:0..1] = (vecino[v:T].entrar->MUTEX[n+1]).
+
+/*property EXCMUTUA[n:0..1] = (entrar_campo -> EXCMUTUA[n+1] | salir_del_campo -> EXCMUTUA[n-1])
+
+when(n==1) entrar_campo -> ERROR*/
+
+
+||MORAS = (VECINO1 || VECINO2 || flag[1..2] : BOOLVAR || turno[1..2] : CARDVAR || MUTEX).
+
+progress VECINO1P = {vecino[1].entrar}
+progress VECINO2P = {vecino[2].entrar}
+
+// Cada vez que dos vecinos quieren entrar a la región crítica, se va a un estado de error.
+// Este código tiene un error gordo en la guarda del if del WAIT: un vecino podría entrar si su bandera 
+// está en True pero no es su turno.

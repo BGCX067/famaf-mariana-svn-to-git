@@ -1,0 +1,15 @@
+range T = -1..3 //Cantidad máxima de filósofos que pueden sentarse al mismo tiempo: 4.
+
+FORK = (get->put->FORK).
+
+PHIL = (sitdown->right.get->left.get->eat->left.put->right.put->arise->PHIL).
+
+BUTLER = BUTLER[3], //Al principio están todos los lugares permitidos (cuatro de cinco) disponibles.
+BUTLER[i:-1..3] = (when (i>=0) sitdown->BUTLER[i-1]
+				| when (i==-1) wait->BUTLER[-1]
+				| when (i<3) arise->BUTLER[i+1])\{wait}.
+
+||DINERS(N=5) = forall[i:0..N-1](phil[i]:PHIL || {phil[i].left, phil[((i-1)+N)%N].right} :: FORK
+				|| {phil[j:0..N-1]} :: BUTLER).
+// en PHIL phil.sitdown 
+// en BUTLER phil.sitdown

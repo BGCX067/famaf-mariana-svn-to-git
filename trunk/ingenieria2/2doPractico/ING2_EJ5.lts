@@ -1,0 +1,12 @@
+const N = 4
+
+BUFFER = (put -> BUFFER | get -> BUFFER).
+
+CONSUMIDOR = (lleno.down->get->vacio.up->CONSUMIDOR).
+
+PRODUCTOR = (vacio.down->put->lleno.up->PRODUCTOR).
+
+SEMAFORO(N=0) = SEMAFORO[N],
+SEMAFORO[v:0..N] = (when (v<N) up->SEMAFORO[v+1] | when (v>0) down->SEMAFORO[v-1]).
+
+||P = (CONSUMIDOR || PRODUCTOR || vacio :: SEMAFORO(4) || lleno :: SEMAFORO(0) || BUFFER) @{put, get}.

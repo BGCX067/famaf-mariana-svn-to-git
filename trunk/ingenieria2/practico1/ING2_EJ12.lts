@@ -1,0 +1,11 @@
+E = (e -> cp[i:0..1] -> if (i==0) then DEJAR else WAIT),
+DEJAR = (soltar -> E),
+WAIT = (cp[i:0..1] -> if (i==0) then DEJAR else WAIT).
+
+PRESS = P[0],
+P[i:0..1] = (when (i==0) soltar -> P[1]
+			|when (i==1) prensar -> sacar ->P [0]
+			|cp[i] -> P[i]).
+
+S = (sacar -> S).
+ 

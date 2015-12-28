@@ -1,0 +1,4 @@
+RESOURCE = (acquire->release->RESOURCE).
+USER = (acquire->use->release->USER).
+
+||RESHARE = (a:USER || b:USER || {a,b} :: RESOURCE).

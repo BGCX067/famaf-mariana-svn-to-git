@@ -1,0 +1,14 @@
+range L = 1..3
+
+EDITORIAL = (comprar[l:L]->displib[i:0..1]->if (i==1) then VERIFCRED else NOTIFICARL),
+VERIFCRED = (verifcred[i:0..1]-> if (i==1) then VENDER else NOTIFICARC),
+NOTIFICARL = (libronodisponible->EDITORIAL),
+VENDER = (ventaexitosa -> EDITORIAL),
+NOTIFICARC = (credinsuf -> EDITORIAL).
+
+CLIENTE = (comprar[l:L]-> ESPERARRTA),
+ESPERARRTA = (credinsuf-> CLIENTE
+			| ventaexitosa -> CLIENTE
+			| libronodisponible-> CLIENTE).
+
+||LIBRERÍA = (cliente[i:1..2] : CLIENTE || cliente[i:1..2] :: EDITORIAL).

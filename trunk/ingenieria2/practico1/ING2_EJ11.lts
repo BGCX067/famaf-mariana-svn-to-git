@@ -1,0 +1,10 @@
+DIRECTOR = (abrir -> cerrar-> DIRECTOR).
+
+EAST = (entrar->EAST).
+
+WEST = (salir -> WEST).
+
+CONTROLER = (abrir->CONTROL[0]),
+CONTROL[i:0..10] = (when (i < 10)entrar -> CONTROL[i+1] | when (i!=0)salir-> CONTROL[i-1] 
+                    | cerrar-> EVACUAR [i]),
+EVACUAR[i:0..10] = (when (i==0)vacio->CONTROLER | when (i>0 && i<10) salir->EVACUAR[i-1]).

@@ -1,0 +1,63 @@
+const T = 0
+const P = 1
+const F = 2
+range R = T..F
+
+PROVEEDOR = (colocar[P] -> colocar[F] -> listo -> PROVEEDOR
+			|colocar[F] -> colocar[T] -> listo -> PROVEEDOR
+			|colocar[T] -> colocar[P] -> listo -> PROVEEDOR).
+
+FUMADOR(TIPO=3) = FUMADOR[TIPO],
+FUMADOR[tipo:R] = (when (tipo == T) ir_mesa -> obtener[P]-> obtener[F] -> dejar_mesa -> fumar -> listo ->FUMADOR[tipo]
+				  |when (tipo == P) ir_mesa -> obtener[F]-> obtener[T] -> dejar_mesa -> fumar -> listo ->FUMADOR[tipo]
+				  |when (tipo == F) ir_mesa -> obtener[T]-> obtener[P] -> dejar_mesa -> fumar -> listo ->FUMADOR[tipo]
+).
+
+
+MESA_MUTEX = (ir_mesa -> dejar_mesa -> MESA_MUTEX).
+
+
+||MESA = ( {[j:R]}::PROVEEDOR || [i:R]:FUMADOR(i) || {[h:R]}::MESA_MUTEX) 
+/ {forall [j:R]{
+		forall[h:R]{
+ 					[h].obtener[j] / [h].colocar[j] 
+		    		}
+				}
+  }.
+
+progress PAPEL = {[1].fumar}
+progress FOSFOROS = {[2].fumar}
+progress TABACO = {[0].fumar}
+
+/*FUMADOR = FUMADOR[5],
+FUMADOR[5] = ( rename[i:R] -> FUMADOR[i]),
+FUMADOR[tipo:R] = (when (tipo == T) acquire -> obtener[P]-> obtener[F] -> fumar -> listo -> release ->FUMADOR[tipo]
+				  |when (tipo == P) acquire -> obtener[F]-> obtener[T] -> fumar -> listo -> release ->FUMADOR[tipo]
+				  |when (tipo == F) acquire -> obtener[T]-> obtener[P] -> fumar -> listo -> release ->FUMADOR[tipo]
+).
+
+NAMER = NAMER[0],
+NAMER[i:0..3] = (when (i < 3) rename[i] -> NAMER[i+1] ).
+
+||FUMERS = ([i:R]:FUMADOR || NAMER) 
+/ {forall [j:R]{
+		forall[h:R]{
+ 					[h].rename[j] / rename[j] 
+		    		}
+				}
+  }.
+
+LOCK = (acquire -> release -> LOCK).
+
+||MESA = ( {[j:R]}::PROVEEDOR || FUMERS || {[h:R]}::LOCK ) 
+/ {forall [j:R]{
+		forall[h:R]{
+ 					[h].obtener[j] / [h].colocar[j] 
+		    		}
+				}
+  }.
+*/
+
+
+
+
